@@ -78,7 +78,7 @@ angular.module('confusionApp')
         $scope.dish = {};
         $scope.showDish = true;
         $scope.message = "Loading ...";
-        $scope.dish = menuFactory.getDishes().get({id:parseInt($stateParams.id,10)});
+        $scope.dish = menuFactory.getDishes().get({id: parseInt($stateParams.id, 10)});
 
     }])
 
@@ -102,11 +102,26 @@ angular.module('confusionApp')
     // implement the IndexController and About Controller here
     .controller('IndexController', ['$scope', 'corporateFactory', 'menuFactory', function ($scope, corporateFactory, menuFactory) {
         $scope.dish = {};
+
         $scope.showDish = true;
-        $scope.message="Loading ...";
-        $scope.featureDish = menuFactory.getDishes().get({id:0});
+        $scope.showError = false;
+        $scope.showPromtion = true;
+
+        $scope.message = "Loading ...";
+        $scope.featureDish = menuFactory.getDishes().get({id: 0});
         //$scope.featureDish = menuFactory.getDish(0);
-        $scope.featurePromotion = menuFactory.getPromotion(0);
+        menuFactory.getPromotion()
+            .get({id: 0},
+                function (response) {
+
+                    $scope.featurePromotion = response;
+                },
+                function (error) {
+                    $scope.showError = true;
+                    $scope.error = error;
+                    $scope.showPromtion = false;
+                }
+            );
         $scope.executive = corporateFactory.getLeader(3);
     }])
     .controller('AboutController', ['$scope', 'corporateFactory', 'menuFactory', function ($scope, corporateFactory, menuFactory) {
